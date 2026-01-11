@@ -5,7 +5,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import pdf from 'pdf-parse';
-import { RAG_CONFIG } from '../../../../shared/utils/constants';
+import { RAG_CONFIG } from '../../../lib/constants';
 
 // Simple text chunking function
 function chunkText(text: string, chunkSize: number = RAG_CONFIG.CHUNK_SIZE, overlap: number = RAG_CONFIG.CHUNK_OVERLAP): string[] {

@@ -7,7 +7,7 @@
 
 import Parse from 'parse';
 import { AgentConfig, ConversationMemory, KnowledgeChunk } from '../../../shared/types';
-import { BACK4APP_CONFIG } from '../../../shared/utils/constants';
+import { BACK4APP_CONFIG } from './constants';
 
 // Initialize Parse on client side
 let parseInitialized = false;
@@ -95,7 +95,16 @@ export const agentConfigService = {
     query.limit(1);
     
     const result = await query.first();
-    return result?.toJSON() as AgentConfig || null;
+    if (!result) return null;
+    const json = result.toJSON();
+    return {
+      objectId: json.objectId,
+      systemInstructions: json.systemInstructions || '',
+      allowedChannelIds: json.allowedChannelIds || [],
+      ragEnabled: json.ragEnabled ?? true,
+      createdAt: json.createdAt ? new Date(json.createdAt) : undefined,
+      updatedAt: json.updatedAt ? new Date(json.updatedAt) : undefined,
+    } as AgentConfig;
   },
 
   async saveConfig(config: Partial<AgentConfig>): Promise<AgentConfig> {
@@ -108,7 +117,15 @@ export const agentConfigService = {
     });
     
     const saved = await agentConfig.save();
-    return saved.toJSON() as AgentConfig;
+    const json = saved.toJSON();
+    return {
+      objectId: json.objectId,
+      systemInstructions: json.systemInstructions || '',
+      allowedChannelIds: json.allowedChannelIds || [],
+      ragEnabled: json.ragEnabled ?? true,
+      createdAt: json.createdAt ? new Date(json.createdAt) : undefined,
+      updatedAt: json.updatedAt ? new Date(json.updatedAt) : undefined,
+    } as AgentConfig;
   },
 
   async updateConfig(objectId: string, updates: Partial<AgentConfig>): Promise<AgentConfig> {
@@ -121,7 +138,15 @@ export const agentConfigService = {
     });
     
     const saved = await config.save();
-    return saved.toJSON() as AgentConfig;
+    const json = saved.toJSON();
+    return {
+      objectId: json.objectId,
+      systemInstructions: json.systemInstructions || '',
+      allowedChannelIds: json.allowedChannelIds || [],
+      ragEnabled: json.ragEnabled ?? true,
+      createdAt: json.createdAt ? new Date(json.createdAt) : undefined,
+      updatedAt: json.updatedAt ? new Date(json.updatedAt) : undefined,
+    } as AgentConfig;
   },
 };
 
@@ -135,7 +160,14 @@ export const memoryService = {
       query.limit(1);
       
       const result = await query.first();
-      return result?.toJSON() as ConversationMemory || null;
+      if (!result) return null;
+      const json = result.toJSON();
+      return {
+        objectId: json.objectId,
+        summary: json.summary || '',
+        createdAt: json.createdAt ? new Date(json.createdAt) : undefined,
+        updatedAt: json.updatedAt ? new Date(json.updatedAt) : undefined,
+      } as ConversationMemory;
     } catch (error: any) {
       // If class doesn't exist (403), return null - we'll create it
       if (error?.code === 101 || error?.message?.includes('unauthorized') || error?.message?.includes('403')) {
@@ -250,7 +282,17 @@ export const knowledgeService = {
     });
     
     const saved = await Parse.Object.saveAll(parseChunks);
-    return saved.map((result: any) => result.toJSON() as KnowledgeChunk);
+    return saved.map((result: any) => {
+      const json = result.toJSON();
+      return {
+        objectId: json.objectId,
+        content: json.content || '',
+        source: json.source || '',
+        embedding: json.embedding || [],
+        createdAt: json.createdAt ? new Date(json.createdAt) : undefined,
+        updatedAt: json.updatedAt ? new Date(json.updatedAt) : undefined,
+      } as KnowledgeChunk;
+    });
   },
 
   async getAllChunks(): Promise<KnowledgeChunk[]> {
@@ -259,7 +301,17 @@ export const knowledgeService = {
     query.descending('createdAt');
     
     const results = await query.find();
-    return results.map((result: any) => result.toJSON() as KnowledgeChunk);
+    return results.map((result: any) => {
+      const json = result.toJSON();
+      return {
+        objectId: json.objectId,
+        content: json.content || '',
+        source: json.source || '',
+        embedding: json.embedding || [],
+        createdAt: json.createdAt ? new Date(json.createdAt) : undefined,
+        updatedAt: json.updatedAt ? new Date(json.updatedAt) : undefined,
+      } as KnowledgeChunk;
+    });
   },
 
   async getAllSources(): Promise<string[]> {

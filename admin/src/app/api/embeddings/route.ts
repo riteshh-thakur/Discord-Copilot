@@ -5,12 +5,19 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
-import { OPENROUTER_CONFIG } from '../../../../shared/utils/constants';
+import { OPENROUTER_CONFIG } from '../../../lib/constants';
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENROUTER_API_KEY,
-  baseURL: OPENROUTER_CONFIG.BASE_URL,
-});
+// Initialize OpenAI client lazily to avoid build-time errors
+function getOpenAIClient() {
+  const apiKey = process.env.OPENROUTER_API_KEY;
+  if (!apiKey) {
+    throw new Error('OPENROUTER_API_KEY environment variable is not set');
+  }
+  return new OpenAI({
+    apiKey,
+    baseURL: OPENROUTER_CONFIG.BASE_URL,
+  });
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -23,6 +30,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const openai = getOpenAIClient();
     const response = await openai.embeddings.create({
       model: OPENROUTER_CONFIG.EMBEDDING_MODEL,
       input: text,
