@@ -1,0 +1,12 @@
+# Back4App ignore file
+node_modules/
+.next/
+.git/
+.gitignore
+.env.local
+.env*.local
+*.log
+.DS_Store
+README.md
+.vscode/
+.idea/

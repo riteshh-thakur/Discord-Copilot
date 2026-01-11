@@ -1,0 +1,227 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+    --radius: 0.75rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 text-foreground;
+    min-height: 100vh;
+  }
+}
+
+@layer components {
+  /* Enhanced Button Styles */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl text-sm font-semibold transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background;
+    @apply px-4 py-2.5 shadow-sm;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+  }
+  
+  .btn:hover::before {
+    width: 300px;
+    height: 300px;
+  }
+  
+  .btn-primary {
+    @apply bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800;
+    @apply shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40;
+    @apply transform hover:scale-105 active:scale-95;
+  }
+  
+  .btn-secondary {
+    @apply bg-white/80 backdrop-blur-sm text-gray-900 border border-gray-200;
+    @apply hover:bg-white hover:border-gray-300 hover:shadow-md;
+    @apply transform hover:scale-105 active:scale-95;
+  }
+  
+  .btn-destructive {
+    @apply bg-gradient-to-r from-red-600 to-red-700 text-white hover:from-red-700 hover:to-red-800;
+    @apply shadow-lg shadow-red-500/30 hover:shadow-xl hover:shadow-red-500/40;
+    @apply transform hover:scale-105 active:scale-95;
+  }
+  
+  /* Glassmorphism Card */
+  .card {
+    @apply rounded-2xl border border-white/20 bg-white/70 backdrop-blur-xl text-card-foreground shadow-xl;
+    @apply transition-all duration-300 hover:shadow-2xl hover:bg-white/80;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
+  }
+  
+  /* Enhanced Input Styles */
+  .input {
+    @apply flex h-12 w-full rounded-xl border-2 border-gray-200 bg-white px-4 py-3 text-sm;
+    @apply ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium;
+    @apply placeholder:text-gray-400;
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:border-blue-500;
+    @apply disabled:cursor-not-allowed disabled:opacity-50;
+    @apply transition-all duration-300 hover:border-gray-300 hover:bg-white;
+    @apply shadow-sm hover:shadow-md focus:shadow-lg;
+  }
+  
+  .textarea {
+    @apply flex min-h-[120px] w-full rounded-xl border-2 border-gray-200 bg-white px-4 py-3 text-sm;
+    @apply ring-offset-background placeholder:text-gray-400;
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:border-blue-500;
+    @apply disabled:cursor-not-allowed disabled:opacity-50;
+    @apply transition-all duration-300 hover:border-gray-300 hover:bg-white;
+    @apply shadow-sm hover:shadow-md focus:shadow-lg;
+    resize: vertical;
+  }
+  
+  /* Modal Overlay */
+  .modal-overlay {
+    @apply fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50;
+    animation: fadeIn 0.2s ease-out;
+  }
+  
+  .modal-content {
+    @apply bg-white rounded-2xl shadow-2xl border border-gray-200;
+    animation: slideUp 0.3s ease-out;
+  }
+  
+  /* Notification */
+  .notification {
+    @apply fixed top-4 right-4 px-6 py-4 rounded-xl shadow-2xl z-50;
+    @apply bg-gradient-to-r from-blue-600 to-purple-600 text-white;
+    @apply backdrop-blur-sm border border-white/20;
+    animation: slideInRight 0.3s ease-out, fadeOut 0.3s ease-out 2.7s forwards;
+  }
+  
+  /* Status Indicator */
+  .status-indicator {
+    @apply relative inline-flex items-center;
+  }
+  
+  .status-indicator::before {
+    content: '';
+    @apply absolute w-3 h-3 rounded-full;
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  
+  /* Loading Spinner */
+  .spinner {
+    @apply inline-block w-5 h-5 border-2 border-current border-t-transparent rounded-full;
+    animation: spin 0.8s linear infinite;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeOut {
+  to {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Smooth Scroll */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-gray-100 rounded-full;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-gradient-to-b from-blue-400 to-purple-500 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply from-blue-500 to-purple-600;
+}
