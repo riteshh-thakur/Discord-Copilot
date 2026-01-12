@@ -484,13 +484,10 @@ export default function Dashboard() {
                 <strong>✨ Auto-Start Feature:</strong> Bot will start automatically after successful login
               </p>
               <p className="text-sm text-gray-600 text-center mt-2">
-                <strong>Demo Credentials:</strong>
+                <strong>Admin Access Required</strong>
               </p>
               <p className="text-xs text-gray-500 mt-1">
-                Username: <span className="font-mono bg-gray-100 px-2 py-1 rounded">admin</span>
-              </p>
-              <p className="text-xs text-gray-500">
-                Password: <span className="font-mono bg-gray-100 px-2 py-1 rounded">admin123</span>
+                Please enter your administrator credentials to access the dashboard
               </p>
             </div>
           </div>
