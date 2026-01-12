@@ -5,7 +5,7 @@
 'use client';
 
 import { useState } from 'react';
-import { ConversationMemory } from '../../../shared/types';
+import { ConversationMemory } from '../../shared/types';
 import { memoryService } from '../lib/back4appService';
 import { X, Save, Edit, Trash2, Brain, Clock } from 'lucide-react';
 

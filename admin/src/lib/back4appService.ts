@@ -6,7 +6,7 @@
 'use client';
 
 import Parse from 'parse';
-import { AgentConfig, ConversationMemory, KnowledgeChunk } from '../../../shared/types';
+import { AgentConfig, ConversationMemory, KnowledgeChunk } from '../../shared/types';
 import { BACK4APP_CONFIG } from './constants';
 
 // Initialize Parse on client side
