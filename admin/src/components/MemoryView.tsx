@@ -15,7 +15,7 @@ interface MemoryViewProps {
   onUpdate: () => void;
 }
 
-export default function MemoryView({ memory, onClose, onUpdate, showNotification }: MemoryViewProps) {
+export default function MemoryView({ memory, onClose, onUpdate }: MemoryViewProps) {
   const [editing, setEditing] = useState(false);
   const [summary, setSummary] = useState(memory?.summary || '');
   const [loading, setLoading] = useState(false);
@@ -48,9 +48,9 @@ export default function MemoryView({ memory, onClose, onUpdate, showNotification
         }
         setSummary('');
         onUpdate();
-        showNotification('✅ Memory cleared successfully!');
+        console.log('✅ Memory cleared successfully!');
       } catch (error) {
-        showNotification('❌ Failed to clear memory');
+        console.error('❌ Failed to clear memory');
       } finally {
         setLoading(false);
       }

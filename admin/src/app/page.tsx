@@ -5,7 +5,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { AgentConfig, ConversationMemory } from '../../../shared/types';
+import { AgentConfig, ConversationMemory } from '../../shared/types';
 import { agentConfigService, memoryService, testBack4AppConnection } from '../lib/back4appService';
 import MemoryView from '../components/MemoryView';
 import KnowledgeManager from '../components/KnowledgeManager';

@@ -1,106 +1,90 @@
-# THE DISCORD COPILOT (Admin-Controlled Agent)
+# Discord Copilot - Admin Portal
 
-A production-grade system with a Web Admin Console (Architect) and Discord Bot (Executive). The Admin controls the AI agent's "brain" while users interact through Discord.
+A Discord bot management system with a web admin dashboard. The admin portal controls the Discord bot's behavior, knowledge base, and settings.
 
-## Architecture
+## Features
 
-- **Admin Console**: Next.js dashboard for managing system instructions, knowledge, memory, and Discord settings
-- **Discord Bot**: Node.js bot that responds based on admin-configured behavior
-- **Backend**: Back4App (Parse Server) for data persistence
-- **LLM**: OpenRouter with Meta Llama 3.3 70B Instruct
+- **Admin Dashboard**: Next.js portal for bot management
+- **Discord Bot**: AI-powered Discord bot with RAG capabilities
+- **Knowledge Management**: Upload and manage knowledge documents
+- **Memory System**: Conversation memory and context tracking
+- **Real-time Control**: Start/stop bot, monitor status
+- **Auto-start**: Bot starts automatically on admin login
+
+## Quick Start
+
+### 1. Deploy Admin Portal
+Deploy the `admin/` folder as your web application root.
+
+### 2. Environment Setup
+Create `.env.local` in the admin folder:
+```env
+DISCORD_BOT_TOKEN=your_discord_bot_token
+DISCORD_CHANNEL_IDS=channel_id_1,channel_id_2
+BACK4APP_APP_ID=your_back4app_app_id
+BACK4APP_MASTER_KEY=your_back4app_master_key
+BACK4APP_SERVER_URL=https://parseapi.back4app.com
+OPENROUTER_API_KEY=your_openrouter_api_key
+```
+
+### 3. Access Admin Portal
+- URL: Your deployed domain
+- Login: `admin` / `admin123`
+- Bot auto-starts on successful login
 
 ## Project Structure
 
 ```
-discord-copilot/
-├── admin/                    # Next.js Admin Console
-│   ├── src/
-│   │   ├── app/             # App Router pages
-│   │   ├── components/      # React components
-│   │   ├── lib/             # Utilities and Back4App client
-│   │   └── types/           # TypeScript types
-│   ├── public/
-│   └── package.json
-├── bot/                     # Discord Bot
-│   ├── src/
-│   │   ├── handlers/        # Discord event handlers
-│   │   ├── services/        # Business logic (RAG, memory, etc.)
-│   │   ├── lib/             # Back4App client and utilities
-│   │   └── types/           # TypeScript types
-│   └── package.json
-├── shared/                  # Shared types and utilities
-│   ├── types/
-│   └── utils/
-├── docs/                    # Documentation
-└── README.md
+brief1/
+├── admin/                    # Complete admin portal (deploy as root)
+│   ├── src/                  # Next.js source code
+│   ├── bot/                  # Discord bot (managed by admin)
+│   ├── shared/               # Shared utilities and types
+│   ├── package.json          # Dependencies
+│   └── .env.local            # Environment variables
+├── README.md                 # This file
+└── .gitignore                # Git ignore rules
 ```
 
-## Tech Stack
+## Admin Features
 
-- **Frontend**: Next.js 14 (App Router), TypeScript, Tailwind CSS
-- **Backend**: Back4App (Parse Server)
-- **Bot**: Node.js, discord.js v14, TypeScript
-- **LLM**: OpenRouter API (Meta Llama 3.3 70B Instruct)
-- **Embeddings**: OpenRouter embedding model
+- **Dashboard**: Real-time bot status and controls
+- **System Instructions**: Configure AI behavior
+- **Memory Management**: View and edit conversation memory
+- **Knowledge Base**: Upload PDF/DOC files for RAG
+- **Discord Settings**: Configure channels and permissions
+- **Bot Control**: Start/stop/restart bot with one click
+- **Logs Viewer**: Monitor bot activity and errors
 
-## Features
+## Bot Features
 
-### Admin Console
-- System Instructions Editor (personality, tone, rules, constraints)
-- Knowledge Management (PDF upload, text extraction, chunking, embeddings)
-- Memory Control (rolling conversation summary)
-- Discord Allow-List management
-
-### Discord Bot
-- Responds in allow-listed channels or when mentioned
-- Context assembly (system instructions + memory + knowledge + user message)
-- RAG-enabled knowledge retrieval
-- Memory updates after each interaction
-
-## Quick Start
-
-1. Clone and install dependencies
-2. Set up Back4App app and configure environment variables
-3. Run admin console: `cd admin && npm run dev`
-4. Run Discord bot: `cd bot && npm start`
+- **AI Responses**: Powered by Meta Llama 3.3 70B
+- **RAG Integration**: Uses uploaded knowledge for context
+- **Memory System**: Remembers conversation history
+- **Channel Control**: Responds only in configured channels
+- **Mention Support**: Responds when @mentioned
+- **Rate Limiting**: Prevents spam and abuse
 
 ## Deployment
 
-### Deploy Admin Console to Back4App
+### Option 1: Vercel/Netlify
+1. Copy `admin/` folder to your deployment platform
+2. Set environment variables
+3. Deploy as root application
 
-The admin console can be deployed to Back4App for production use. See the comprehensive deployment guide:
+### Option 2: Traditional Hosting
+1. Copy `admin/` folder to web root
+2. Install dependencies: `npm install`
+3. Build: `npm run build`
+4. Start: `npm start`
 
-- **Deployment Guide**: `/docs/BACK4APP_DEPLOYMENT.md` - Complete guide to deploying the admin console to Back4App
+## Security
 
-**Quick Deployment Steps:**
+- Admin authentication required for bot control
+- Environment variables contain sensitive tokens
+- Bot runs with server permissions
+- Process isolation for bot operations
 
-1. **Prepare for deployment:**
-   ```bash
-   cd admin
-   ./deploy.sh  # Or: npm run build
-   ```
+## Support
 
-2. **Deploy via Back4App Dashboard:**
-   - Create a new app in Back4App
-   - Connect your Git repository
-   - Set root directory to `admin`
-   - Configure environment variables
-   - Deploy!
-
-3. **Required Environment Variables:**
-   - `NEXT_PUBLIC_BACK4APP_APP_ID`
-   - `NEXT_PUBLIC_BACK4APP_JS_KEY`
-   - `NEXT_PUBLIC_BACK4APP_SERVER_URL`
-   - `OPENROUTER_API_KEY`
-   - `NODE_ENV=production`
-   - `PORT=3000`
-
-For detailed instructions, see `/docs/BACK4APP_DEPLOYMENT.md`.
-
-## Documentation
-
-- **Setup Guide**: `/docs/SETUP.md` - Initial setup and configuration
-- **User Guide**: `/docs/USER_GUIDE.md` - Complete guide to using all features
-- **Back4App Setup**: `/docs/BACK4APP_SETUP.md` - Back4App-specific setup and troubleshooting
-- **Deployment Guide**: `/docs/BACK4APP_DEPLOYMENT.md` - Deploy admin console to Back4App
-- **Troubleshooting**: `/docs/TROUBLESHOOTING.md` - Common issues and solutions
+For issues and troubleshooting, check the admin dashboard logs and bot console output.

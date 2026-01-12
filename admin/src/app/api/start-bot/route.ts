@@ -12,9 +12,16 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const { spawn } = require('child_process');
     
     return new Promise((resolve) => {
+      // Determine bot directory path (works for both local and deployed environments)
+      const botDir = process.env.NODE_ENV === 'production' 
+        ? './bot'  // When admin is root, bot is in ./bot subdirectory
+        : '../bot'; // When developing locally, bot is in ../bot
+      
+      console.log(`📁 Bot directory: ${botDir}`);
+      
       // Change to bot directory and start the bot
       const botProcess = spawn('npm', ['start'], {
-        cwd: '/Users/riteshthakur/Developer/Projects/brief1/bot',
+        cwd: botDir,
         stdio: 'pipe',
         shell: true
       });
