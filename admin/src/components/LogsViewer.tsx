@@ -19,6 +19,18 @@ interface LogsViewerProps {
   onClose: () => void;
 }
 
+interface LogEntry {
+  id: string;
+  timestamp: Date;
+  level: 'info' | 'warning' | 'error' | 'success';
+  message: string;
+  source: string;
+}
+
+interface LogsViewerProps {
+  onClose: () => void;
+}
+
 export default function LogsViewer({ onClose }: LogsViewerProps) {
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [loading, setLoading] = useState(true);

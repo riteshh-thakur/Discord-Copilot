@@ -13,6 +13,9 @@ import { RAG_CONFIG, MEMORY_CONFIG } from '../shared/utils/constants';
 let cachedConfig: { config: any; timestamp: number } | null = null;
 const CONFIG_CACHE_TTL = 60000; // 1 minute
 
+// Track processed messages to prevent duplicates
+const processedMessages = new Map<string, number>(); // message ID -> timestamp
+
 async function getActiveConfig() {
   const now = Date.now();
   if (cachedConfig && (now - cachedConfig.timestamp) < CONFIG_CACHE_TTL) {
@@ -28,15 +31,21 @@ async function shouldBotRespond(message: Message): Promise<boolean> {
   // Don't respond to own messages
   if (message.author.bot) return false;
   
-  // Check if message mentions the bot
+  // Check if message mentions bot
   const botMentioned = message.mentions.has(message.client.user);
   if (botMentioned) return true;
   
   // Check if channel is in allowed list
   const config = await getActiveConfig();
+  console.log(`📋 Config found: ${!!config}`);
+  console.log(`📋 Allowed channels: ${JSON.stringify(config?.allowedChannelIds || [])}`);
+  
   if (!config) return false; // No config = don't respond
   
-  return isAllowedChannel(message.channelId, config.allowedChannelIds || []);
+  const isAllowed = isAllowedChannel(message.channelId, config.allowedChannelIds || []);
+  console.log(`📋 Channel ${message.channelId} allowed: ${isAllowed}`);
+  
+  return isAllowed;
 }
 
 async function retrieveKnowledge(userMessage: string, ragEnabled: boolean): Promise<KnowledgeChunk[]> {
@@ -122,9 +131,22 @@ async function updateMemory(userMessage: string, botResponse: string, currentSum
 
 export async function handleMessage(message: Message, client: Client) {
   try {
+    // DEBUG: Log message details
+    console.log(`📨 Message received: ${message.content}`);
+    console.log(`📍 Channel ID: ${message.channelId} (type: ${typeof message.channelId})`);
+    console.log(`👤 Author: ${message.author.username} (bot: ${message.author.bot})`);
+    console.log(`🏷️ Bot mentioned: ${message.mentions.has(message.client.user)}`);
+    console.log(`🆔 Message ID: ${message.id}`);
+    console.log(`⏰ Timestamp: ${new Date().toISOString()}`);
+    
     // Check if bot should respond
     const shouldRespond = await shouldBotRespond(message);
-    if (!shouldRespond) return;
+    console.log(`🤖 Should respond: ${shouldRespond}`);
+    
+    if (!shouldRespond) {
+      console.log(`❌ Not responding - shouldRespond is false`);
+      return;
+    }
 
     // Check rate limiting
     if (!checkRateLimit(message.channelId)) {

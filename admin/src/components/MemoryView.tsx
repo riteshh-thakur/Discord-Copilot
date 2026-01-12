@@ -13,7 +13,6 @@ interface MemoryViewProps {
   memory: ConversationMemory | null;
   onClose: () => void;
   onUpdate: () => void;
-  showNotification: (message: string) => void;
 }
 
 export default function MemoryView({ memory, onClose, onUpdate, showNotification }: MemoryViewProps) {
