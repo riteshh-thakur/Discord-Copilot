@@ -22,6 +22,10 @@ const nextConfig = {
   // Production optimizations
   compress: true,
   poweredByHeader: false,
+  
+  // Vercel-specific configuration
+  trailingSlash: false,
+  generateEtags: false,
 };
 
 module.exports = nextConfig;

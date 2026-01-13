@@ -1,0 +1,51 @@
+{
+  "version": 2,
+  "name": "discord-copilot",
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/next"
+    }
+  ],
+  "env": {
+    "NEXT_PUBLIC_BACK4APP_APP_ID": "@back4app_app_id",
+    "NEXT_PUBLIC_BACK4APP_JS_KEY": "@back4app_js_key",
+    "NEXT_PUBLIC_BACK4APP_SERVER_URL": "@back4app_server_url",
+    "BACK4APP_APP_ID": "@back4app_app_id",
+    "BACK4APP_MASTER_KEY": "@back4app_master_key",
+    "BACK4APP_SERVER_URL": "@back4app_server_url",
+    "DISCORD_BOT_TOKEN": "@discord_bot_token",
+    "OPENROUTER_API_KEY": "@openrouter_api_key"
+  },
+  "build": {
+    "env": {
+      "NEXT_PUBLIC_BACK4APP_APP_ID": "@back4app_app_id",
+      "NEXT_PUBLIC_BACK4APP_JS_KEY": "@back4app_js_key",
+      "NEXT_PUBLIC_BACK4APP_SERVER_URL": "@back4app_server_url"
+    }
+  },
+  "functions": {
+    "src/app/api/**/*.ts": {
+      "maxDuration": 30
+    }
+  },
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        },
+        {
+          "key": "Access-Control-Allow-Methods",
+          "value": "GET, POST, PUT, DELETE, OPTIONS"
+        },
+        {
+          "key": "Access-Control-Allow-Headers",
+          "value": "Content-Type, Authorization"
+        }
+      ]
+    }
+  ]
+}
