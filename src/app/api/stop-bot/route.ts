@@ -13,7 +13,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     
     return new Promise((resolve) => {
       // Kill processes matching the bot pattern
-      exec('pkill -f "node.*discord-copilot-bot" || pkill -f "npm.*start" || true', (error: any, stdout: any, stderr: any) => {
+      exec('pkill -f "node.*discord-copilot-bot" || pkill -f "npm.*start" || true', { 
+        shell: false,
+        env: { ...process.env }
+      }, (error: any, stdout: any, stderr: any) => {
         console.log('Bot process killed:', stdout || stderr || 'No processes to kill');
         
         resolve(NextResponse.json({ 

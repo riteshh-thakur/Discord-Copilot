@@ -1,8 +1,3 @@
-interface KnowledgeManagerProps {
-  onClose: () => void;
-  onUpdate?: () => Promise<void>;
-}
-
-export default function KnowledgeManager({ onClose, onUpdate }: KnowledgeManagerProps) {
+export default function KnowledgeManager({ onClose, onUpdate }: { onClose: () => void; onUpdate?: () => Promise<void> }) {
   return <div>Knowledge Manager</div>;
 }

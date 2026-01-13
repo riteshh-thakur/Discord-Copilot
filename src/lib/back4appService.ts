@@ -225,7 +225,10 @@ export const memoryService = {
       initParseClient();
       const query = new Parse.Query(BACK4APP_CONFIG.CLASS_NAMES.CONVERSATION_MEMORY);
       const memory = await query.get(objectId);
-      memory.set('summary', summary);
+      
+      // Handle empty summary - use placeholder like in saveMemory
+      const summaryValue = summary.trim() || 'No conversation history yet';
+      memory.set('summary', summaryValue);
       
       const saved = await memory.save();
       const json = saved.toJSON();

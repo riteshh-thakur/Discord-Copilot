@@ -3,12 +3,13 @@
  */
 
 import OpenAI from 'openai';
-import { BotContext, OpenRouterResponse } from '../../../shared/types';
-import { OPENROUTER_CONFIG, PROMPT_TEMPLATES } from '../../../shared/utils/constants';
+import { BotContext, OpenRouterResponse } from '@shared/types';
+import { OPENROUTER_CONFIG, PROMPT_TEMPLATES } from '@shared/utils/constants';
+import env from '../utils/env';
 
-// Initialize OpenAI client for OpenRouter
+// Initialize OpenAI client for OpenRouter using centralized environment
 const openai = new OpenAI({
-  apiKey: process.env.OPENROUTER_API_KEY || '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',
+  apiKey: env.OPENROUTER_API_KEY || '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',
   baseURL: OPENROUTER_CONFIG.BASE_URL,
 });
 

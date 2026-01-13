@@ -1,0 +1,14 @@
+{
+  "name": "discord-copilot-bot",
+  "version": "1.0.0",
+  "description": "Discord bot for Discord Copilot system",
+  "main": "dist/bot/src/index.js",
+  "private": true,
+  "scripts": {
+    "build": "tsc && ./fix-paths.sh",
+    "lint": "eslint src --ext .ts"
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "note": "All dependencies are managed in the root package.json. This file is kept for build configuration only."
+}

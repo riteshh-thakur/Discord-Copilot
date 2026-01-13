@@ -1,0 +1,58 @@
+{
+  "name": "discord-copilot",
+  "version": "1.0.0",
+  "description": "Discord Copilot - Admin Console and Bot System",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"npm run dev:admin\" \"npm run dev:bot\"",
+    "dev:admin": "next dev",
+    "dev:bot": "cd bot && tsc && ./fix-paths.sh && node dist/bot/src/index.js",
+    "build": "npm run build:admin && npm run build:bot",
+    "build:admin": "next build",
+    "build:bot": "cd bot && tsc && ./fix-paths.sh",
+    "start": "concurrently \"npm run start:admin\" \"npm run start:bot\"",
+    "start:admin": "next start",
+    "start:bot": "node bot/dist/bot/src/index.js",
+    "lint": "next lint",
+    "install:all": "npm install",
+    "clean": "rm -rf .next bot/dist bot/node_modules node_modules",
+    "setup": "npm install && npm run build",
+    "deploy": "npm run build && echo 'Ready for deployment!'"
+  },
+  "dependencies": {
+    "@tailwindcss/line-clamp": "^0.4.4",
+    "@types/pdf-parse": "^1.1.1",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "autoprefixer": "^10.0.1",
+    "clsx": "^2.0.0",
+    "discord.js": "^14.14.1",
+    "dotenv": "^16.3.1",
+    "framer-motion": "^12.25.0",
+    "lucide-react": "^0.294.0",
+    "next": "14.0.4",
+    "node-cron": "^3.0.3",
+    "openai": "^6.16.0",
+    "parse": "^4.0.0",
+    "pdf-parse": "^1.1.1",
+    "postcss": "^8",
+    "react": "^18",
+    "react-dom": "^18",
+    "react-dropzone": "^14.2.3",
+    "tailwindcss": "^3.3.0",
+    "three": "^0.182.0",
+    "typescript": "^5"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/parse": "^3.0.9",
+    "concurrently": "^8.2.2",
+    "eslint": "^8",
+    "eslint-config-next": "14.0.4",
+    "ts-node": "^10.9.1"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  }
+}

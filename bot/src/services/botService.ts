@@ -2,7 +2,7 @@
  * Bot Service for utility functions
  */
 
-import { DISCORD_CONFIG } from '../../../shared/utils/constants';
+import { DISCORD_CONFIG } from '@shared/utils/constants';
 
 // Rate limiting map: channelId -> { lastResponse: timestamp, responseCount: number }
 const rateLimitMap = new Map<string, { lastResponse: number; responseCount: number }>();

@@ -5,9 +5,10 @@
 import { Client, Message } from 'discord.js';
 import { generateResponse, generateEmbedding } from '../services/llmService';
 import { isAllowedChannel, checkRateLimit, cleanMessage } from '../services/botService';
-import { AgentConfigService, MemoryService, KnowledgeService } from '../../../shared/utils/back4app';
-import { BotContext, KnowledgeChunk } from '../../../shared/types';
-import { RAG_CONFIG, MEMORY_CONFIG } from '../../../shared/utils/constants';
+import { AgentConfigService, MemoryService, KnowledgeService } from '@shared/utils/back4app';
+import { BotContext, KnowledgeChunk } from '@shared/types';
+import { RAG_CONFIG, MEMORY_CONFIG } from '@shared/utils/constants';
+import env from '../utils/env';
 
 // Cache config to avoid repeated queries
 let cachedConfig: { config: any; timestamp: number } | null = null;
@@ -15,6 +16,8 @@ const CONFIG_CACHE_TTL = 60000; // 1 minute
 
 // Track processed messages to prevent duplicates
 const processedMessages = new Map<string, number>(); // message ID -> timestamp
+// Track messages we've already replied to (to avoid multiple replies)
+const repliedMessages = new Set<string>();
 
 async function getActiveConfig() {
   const now = Date.now();
@@ -135,11 +138,7 @@ export async function handleMessage(message: Message, client: Client) {
     console.log(`📨 Message received: ${message.content}`);
     console.log(`📍 Channel ID: ${message.channelId} (type: ${typeof message.channelId})`);
     console.log(`👤 Author: ${message.author.username} (bot: ${message.author.bot})`);
-    console.log(`🏷️ Bot mentioned: ${message.mentions.has(message.client.user)}`);
-    console.log(`🆔 Message ID: ${message.id}`);
-    console.log(`⏰ Timestamp: ${new Date().toISOString()}`);
-    
-    // Check if bot should respond
+    console.log('🔍 Checking if bot should respond...');
     const shouldRespond = await shouldBotRespond(message);
     console.log(`🤖 Should respond: ${shouldRespond}`);
     
@@ -148,36 +147,114 @@ export async function handleMessage(message: Message, client: Client) {
       return;
     }
 
+    // Check for duplicate messages (prevent processing same message twice)
+    const messageKey = `${message.channelId}-${message.id}`;
+    const now = Date.now();
+    if (processedMessages.has(messageKey) && (now - processedMessages.get(messageKey)!) < 5000) {
+      console.log(`❌ Not responding - duplicate message detected`);
+      return;
+    }
+    processedMessages.set(messageKey, now);
+
     // Check rate limiting
+    console.log('🔍 Checking rate limit...');
     if (!checkRateLimit(message.channelId)) {
-      await message.reply('I\'m processing too many requests right now. Please try again in a moment.');
+      console.log('❌ Rate limit exceeded, sending rate limit message');
+      await sendReplyOnce(message, 'I\'m processing too many requests right now. Please try again in a moment.');
       return;
     }
 
     // Show typing indicator
+    console.log('⌨️ Sending typing indicator...');
     if (message.channel && 'sendTyping' in message.channel) {
       await message.channel.sendTyping();
     }
 
     // Assemble context (includes config, memory, and knowledge)
+    console.log('🔧 Assembling context...');
     const context = await assembleContext(message);
+    console.log('✅ Context assembled successfully');
 
     // Generate response
+    console.log('🤖 Generating response...');
     const response = await generateResponse(context);
+    console.log('✅ Response generated successfully:', response?.substring(0, 50) + '...');
 
     // Send response
     if (response) {
-      await message.reply(response);
-      
+      console.log('📤 Sending response...');
+      await sendReplyOnce(message, response);
+      console.log('✅ Response sent successfully');
+
       // Update memory asynchronously (don't block response)
       const cleanedMessage = cleanMessage(message.content);
       updateMemory(cleanedMessage, response, context.memorySummary).catch(err => {
         console.error('Failed to update memory:', err);
       });
+    } else {
+      console.log('⚠️ No response generated');
     }
 
   } catch (error) {
-    console.error('Error handling message:', error);
-    await message.reply('Sorry, I encountered an error while processing your message. Please try again.');
+    console.error('=== ERROR DETAILS ===');
+    console.error('Error type:', typeof error);
+    console.error('Error name:', error?.name);
+    console.error('Error message:', error?.message);
+    console.error('Error stack:', error?.stack);
+    console.error('Full error object:', error);
+    console.error('=== END ERROR DETAILS ===');
+    // Only reply if this isn't a bot message to avoid loops
+    if (!message.author.bot) {
+      await sendReplyOnce(message, 'Sorry, I encountered an error while processing your message. Please try again.');
+    }
+  }
+}
+
+// Helper to ensure we only reply once per message
+async function sendReplyOnce(message: Message, content: string) {
+  try {
+    console.log('🔍 sendReplyOnce called for message:', message.id, 'content:', content.substring(0, 50));
+    const key = `${message.channelId}-${message.id}`;
+    if (repliedMessages.has(key)) {
+      // Already replied to this message in this process
+      console.log('Not sending response - already replied in this process', key);
+      return;
+    }
+
+    // Before replying, check recent channel messages to see if *any* bot
+    // (possibly from another process) already replied to this message.
+    try {
+      console.log('🔍 Fetching recent messages to check for duplicates...');
+      if (message.channel && 'messages' in message.channel) {
+        const recent = await message.channel.messages.fetch({ limit: 30 });
+        console.log('✅ Fetched', recent.size, 'recent messages');
+        const botReply = recent.find(m => {
+          try {
+            // 1) A reply referencing the original message
+            if (m.reference && (m.reference.messageId === message.id) && m.author && m.author.bot) return true;
+            // 2) A bot message with identical content (covers non-reply posts)
+            if (m.author && m.author.bot && m.content && content && m.content.trim() === content.trim()) return true;
+            return false;
+          } catch (e) {
+            return false;
+          }
+        });
+        if (botReply) {
+          // Another bot (or another instance) already replied to this message
+          console.log('Not sending response - another instance already replied during generation', key, botReply.id);
+          return;
+        }
+      }
+    } catch (err) {
+      // If fetching recent messages fails, continue and try to reply once
+      console.warn('Could not fetch recent messages to dedupe reply:', err);
+    }
+
+    // Mark replied locally with TTL to avoid memory growth
+    repliedMessages.add(key);
+    setTimeout(() => repliedMessages.delete(key), 60 * 1000);
+    await message.reply(content);
+  } catch (err) {
+    console.error('Failed to send reply:', err);
   }
 }

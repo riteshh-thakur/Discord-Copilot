@@ -14,8 +14,12 @@
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
-    "downlevelIteration": true
+    "downlevelIteration": true,
+    "baseUrl": ".",
+    "paths": {
+      "@shared/*": ["../shared/*"]
+    }
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "../shared/**/*"],
   "exclude": ["node_modules", "dist"]
 }
