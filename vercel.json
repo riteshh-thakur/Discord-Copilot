@@ -8,20 +8,20 @@
     }
   ],
   "env": {
-    "NEXT_PUBLIC_BACK4APP_APP_ID": "@back4app_app_id",
-    "NEXT_PUBLIC_BACK4APP_JS_KEY": "@back4app_js_key",
-    "NEXT_PUBLIC_BACK4APP_SERVER_URL": "@back4app_server_url",
-    "BACK4APP_APP_ID": "@back4app_app_id",
-    "BACK4APP_MASTER_KEY": "@back4app_master_key",
-    "BACK4APP_SERVER_URL": "@back4app_server_url",
-    "DISCORD_BOT_TOKEN": "@discord_bot_token",
-    "OPENROUTER_API_KEY": "@openrouter_api_key"
+    "NEXT_PUBLIC_BACK4APP_APP_ID": "@back4app-app-id",
+    "NEXT_PUBLIC_BACK4APP_JS_KEY": "@back4app-js-key",
+    "NEXT_PUBLIC_BACK4APP_SERVER_URL": "@back4app-server-url",
+    "BACK4APP_APP_ID": "@back4app-app-id",
+    "BACK4APP_MASTER_KEY": "@back4app-master-key",
+    "BACK4APP_SERVER_URL": "@back4app-server-url",
+    "DISCORD_BOT_TOKEN": "@discord-bot-token",
+    "OPENROUTER_API_KEY": "@openrouter-api-key"
   },
   "build": {
     "env": {
-      "NEXT_PUBLIC_BACK4APP_APP_ID": "@back4app_app_id",
-      "NEXT_PUBLIC_BACK4APP_JS_KEY": "@back4app_js_key",
-      "NEXT_PUBLIC_BACK4APP_SERVER_URL": "@back4app_server_url"
+      "NEXT_PUBLIC_BACK4APP_APP_ID": "@back4app-app-id",
+      "NEXT_PUBLIC_BACK4APP_JS_KEY": "@back4app-js-key",
+      "NEXT_PUBLIC_BACK4APP_SERVER_URL": "@back4app-server-url"
     }
   },
   "headers": [
