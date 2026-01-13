@@ -24,11 +24,6 @@
       "NEXT_PUBLIC_BACK4APP_SERVER_URL": "@back4app_server_url"
     }
   },
-  "functions": {
-    "src/app/api/**/*.ts": {
-      "maxDuration": 30
-    }
-  },
   "headers": [
     {
       "source": "/api/(.*)",
